@@ -1,5 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_todo/applogo.dart';
+import 'package:flutter_todo/config.dart';
+import 'package:flutter_todo/dashboard.dart';
 import 'package:flutter_todo/registration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -16,6 +19,66 @@ class _SignInPageState extends State<SignInPage> {
   TextEditingController passwordController = TextEditingController();
   bool _isNotValidate = false;
   late SharedPreferences prefs;
+
+  @override
+  void initState() {
+    super.initState();
+    initSharedPref();
+  }
+
+// store the data in shared pref.
+  void initSharedPref() async {
+    prefs = await SharedPreferences.getInstance();
+  }
+
+  void loginUser() async {
+    if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
+      var reqBody = {
+        "email": emailController.text,
+        "password": passwordController.text,
+      };
+
+      Dio dio = Dio();
+      try {
+        // this function will make automatically call our backend.
+
+        // var response = await http.post(Uri.parse(registration),
+        //     headers: {"Content-Type": "application/json"},
+        //     body: jsonEncode(reqBody));
+
+        Response response = await dio.post(
+          login,
+          options: Options(
+            headers: {"Content-Type": "application/json"},
+          ),
+          data: reqBody,
+        );
+
+        var jsonResponse = response.data;
+
+        print(jsonResponse['status']);
+
+        if (jsonResponse['status']) {
+          var myToken = jsonResponse['token'];
+          prefs.setString('token', myToken);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Dashboard(
+                        token: myToken,
+                      )));
+        } else {
+          print("Something Went Wrong");
+        }
+      } catch (e) {
+        print("Bağlanti hatasi: $e");
+      }
+    } else {
+      setState(() {
+        _isNotValidate = true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +129,7 @@ class _SignInPageState extends State<SignInPage> {
                   ).p4().px24(),
                   GestureDetector(
                     onTap: () {
-                      //loginUser();
+                      loginUser();
                     },
                     child: HStack([
                       VxBox(child: "LogIn".text.white.makeCentered().p16())
