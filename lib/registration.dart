@@ -1,8 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_todo/applogo.dart';
 import 'package:flutter_todo/loginpage.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'config.dart';
 
 class Registration extends StatefulWidget {
   const Registration({super.key});
@@ -24,6 +27,30 @@ class _RegistrationState extends State<Registration> {
         "email": emailController.text,
         "password": passwordController.text,
       };
+
+      Dio dio = Dio();
+      try {
+        // this function will make automatically call our backend.
+
+        // var response = await http.post(Uri.parse(registration),
+        //     headers: {"Content-Type": "application/json"},
+        //     body: jsonEncode(reqBody));
+
+        Response response = await dio.post(
+          // registration,
+          'http://192.168.1.6:3000/register',
+          options: Options(
+            headers: {"Content-Type": "application/json"},
+          ),
+          data: reqBody,
+        );
+
+        var jsonResponse = response.data;
+
+        print(jsonResponse['status']);
+      } catch (e) {
+        print("Bağlanti hatasi: $e");
+      }
     } else {
       setState(() {
         _isNotValidate = true;
