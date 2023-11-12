@@ -37,8 +37,8 @@ class _RegistrationState extends State<Registration> {
         //     body: jsonEncode(reqBody));
 
         Response response = await dio.post(
-          // registration,
-          'http://192.168.1.6:3000/register',
+          registration,
+          //'http://192.168.1.6:3000/register',
           options: Options(
             headers: {"Content-Type": "application/json"},
           ),
@@ -48,6 +48,13 @@ class _RegistrationState extends State<Registration> {
         var jsonResponse = response.data;
 
         print(jsonResponse['status']);
+
+        if (jsonResponse['status']) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => SignInPage()));
+        } else {
+          print("Something Went Wrong");
+        }
       } catch (e) {
         print("Bağlanti hatasi: $e");
       }
