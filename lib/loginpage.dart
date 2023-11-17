@@ -105,7 +105,7 @@ class _SignInPageState extends State<SignInPage> {
                   "Email Sign-In".text.size(22).yellow100.make(),
                   TextField(
                     controller: emailController,
-                    keyboardType: TextInputType.text,
+                    keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.white,

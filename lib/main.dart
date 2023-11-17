@@ -26,11 +26,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: (JwtDecoder.isExpired(token) == false)
+      //home: Dashboard(token: token),
+      home: (token != null && JwtDecoder.isExpired(token) == false)
           ? Dashboard(token: token)
           : SignInPage(),
     );
