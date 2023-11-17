@@ -5,3 +5,4 @@ final registration = url + 'register';
 final login = url + 'login';
 final addtodo = url + 'storeTodo';
 final getTodoList = url + 'getUserTodoList';
+final deleteTodo = url + 'deleteTodo';
