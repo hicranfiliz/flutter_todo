@@ -30,6 +30,7 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
 
     Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
+    // get userId and userEmail
     userId = jwtDecodedToken['_id'];
     _userEmail = jwtDecodedToken['email'];
     getToDoList(userId);
@@ -99,18 +100,18 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
-  // void deleteItem(id) async {
-  //   var reqBody = {"id": id};
+  void deleteItem(id) async {
+    var reqBody = {"id": id};
 
-  //   var response = await http.post(Uri.parse(deleteTodo),
-  //       headers: {"Content-Type": "application/json"},
-  //       body: jsonEncode(reqBody));
+    var response = await http.post(Uri.parse(deleteTodo),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(reqBody));
 
-  //   var jsonResponse = jsonDecode(response.body);
-  //   if (jsonResponse['status']) {
-  //     getToDoList(userId);
-  //   }
-  // }
+    var jsonResponse = jsonDecode(response.body);
+    if (jsonResponse['status']) {
+      getToDoList(userId);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -167,6 +168,7 @@ class _DashboardState extends State<Dashboard> {
                                     label: "Delete",
                                     onPressed: (BuildContext context) {
                                       print('${items![index]['_id']}');
+                                      deleteItem('${items![index]['_id']}');
                                     })
                               ]),
                           child: Card(
